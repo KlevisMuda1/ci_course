@@ -1,0 +1,44 @@
+pipeline {
+    agent any
+    triggers {
+        pollSCM('*/1 * * * *')
+        upstream(upstreamProjects: 'docker-base', threshold: hudson.model.Result.SUCCESS)
+    }
+    stages {
+        stage('build') {
+            steps {
+                echo "Building node application"
+            }
+        }
+        stage('deploy-dev') {
+            steps {
+                echo "Depployment of DEV"
+            }
+        }
+        stage('test-dev') {
+            steps {
+                echo "Testing of DEV"
+            }
+        }
+        stage('deploy-int') {
+            steps {
+                echo "Depployment of INT"
+            }
+        }
+        stage('test-int') {
+            steps {
+                echo "Testing of INT"
+            }
+        }
+        stage('deploy-prd') {
+            steps {
+                echo "Depployment of PRD"
+            }
+        }
+        stage('test-prd') {
+            steps {
+                echo "Testing of PRD"
+            }
+        }
+    }
+}
