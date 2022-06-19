@@ -2,7 +2,6 @@ pipeline {
     agent any
     triggers {
         pollSCM('*/1 * * * *')
-        upstream(upstreamProjects: 'docker-base', threshold: hudson.model.Result.SUCCESS)
     }
     stages {
         stage('build') {
@@ -26,7 +25,7 @@ pipeline {
         }
         stage('deploy-int') {
             steps {
-               script{
+                script{
                     deploy("INT")
                 }
             }
@@ -55,10 +54,11 @@ pipeline {
     }
 }
 
-def deploy(String enviroment){
-    echo "Deployment on ${enviroment} enviroment triggered..."
-    build job: "ui-tests", parameters: [ string(name: "ENVIRONMENT", defaultValue: "DEV")]
+def deploy(String environment){
+    echo "Deployment on ${environment} environment triggered... "
+    build job: "ui-tests", parameters: [string(name: "ENVIRONMENT", value: "${environment}")]
 }
+
 def test(String environment){
     echo "Running tests on ${environment} environment.."
     sh "docker run --network=host -d -t --name api_test_executor_${environment} api_test_executor"
