@@ -61,4 +61,8 @@ def deploy(String enviroment){
 }
 def test(String enviroment){
     echo "Runing test on ${enviroment} enviroment..."
+    sh "docker run -network=host -d -t --name api_test_executer_${enviroment} api_test_executer"
+    sh "docker exec api_test_executer_${enviroment} cucumber --tags=@${enviroment} --format html --out test-output/report.html"
+    sh "docker cp api_test_executer_${enviroment}:/usr/src/api-tests/test-output/report.html report_${enviroment}.html"
+    sh "docker rm -f api_test_executor_${environment}"
 }
